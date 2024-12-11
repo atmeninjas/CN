@@ -1,0 +1,61 @@
+# Function to calculate GCD (Greatest Common Divisor)
+def gcd(m, n):
+    while n != 0:
+        r = m % n
+        m = n
+        n = r
+    return m
+
+# Main function to run the RSA algorithm
+def rsa():
+    # Initialize variables
+    p = q = n = e = d = phi = 0
+    nummes = []
+    encrypted = []
+    decrypted = []
+
+    # Input the message to be encrypted
+    message = input("Enter the Message to be encrypted: ")
+
+    # Input values for p and q
+    p = int(input("Enter value of p: "))
+    q = int(input("Enter value of q: "))
+
+    # Calculate n and phi
+    n = p * q
+    phi = (p - 1) * (q - 1)
+
+    # Find e such that 1 < e < phi and gcd(e, phi) = 1
+    for i in range(2, phi):
+        if gcd(i, phi) == 1:
+            e = i
+            break
+
+    # Find d such that (d * e) % phi = 1
+    for i in range(2, phi):
+        if (e * i - 1) % phi == 0:
+            d = i
+            break
+
+    # Convert each character of the message to a number
+    nummes = [ord(c) - 96 for c in message]
+
+    # Encrypt the message
+    for num in nummes:
+        encrypted.append(pow(num, e, n))
+
+    # Print the encrypted message
+    print("\nEncrypted message:")
+    print(" ".join(map(str, encrypted)))
+
+    # Decrypt the message
+    for num in encrypted:
+        decrypted.append(pow(num, d, n))
+
+    # Print the decrypted message
+    print("\nDecrypted message:")
+    decrypted_message = "".join(chr(num + 96) for num in decrypted)
+    print(decrypted_message)
+
+# Run the RSA encryption and decryption
+rsa()

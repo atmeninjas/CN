@@ -1,0 +1,69 @@
+# Function to perform XOR operation for binary strings
+def xor():
+    # Perform XOR between check_value and gen_poly (ignoring the first bit)
+    for j in range(1, len(gen_poly)):
+        if check_value[j] == gen_poly[j]:
+            check_value[j] = '0'
+        else:
+            check_value[j] = '1'
+
+# Function to compute the CRC value
+def crc():
+    global check_value
+    # Start with the first part of the data
+    check_value = list(data[:len(gen_poly)])
+    
+    # Iterate over the remaining bits in the data
+    for i in range(len(gen_poly), len(data) + 1):
+        # Perform XOR if the first bit of check_value is '1'
+        if check_value[0] == '1':
+            xor()
+        # Shift left by removing the first bit and adding the next data bit
+        check_value = check_value[1:] + ([data[i]] if i < len(data) else ['0'])
+
+# Function to simulate the receiver side
+def receiver():
+    # Input received data
+    received_data = input("Enter the received data: ")
+    print("\n-----------------------------")
+    print(f"Data received: {received_data}")
+    
+    # Perform CRC on the received data
+    global data
+    data = received_data
+    crc()
+    
+    # Check if there's an error (non-zero remainder)
+    if '1' in check_value:
+        print("\nError detected\n")
+    else:
+        print("\nNo error detected\n")
+
+# Main function
+if _name_ == "_main_":
+    # Input the data to be transmitted
+    data = input("Enter data to be transmitted: ")
+    
+    # Input the generator polynomial
+    gen_poly = input("Enter the generating polynomial: ")
+    
+    # Append zeros to the data (n-1 zeros where n is the length of gen_poly)
+    data += '0' * (len(gen_poly) - 1)
+    print("\n----------------------------------------")
+    print(f"Data padded with n-1 zeros: {data}")
+    print("----------------------------------------")
+    
+    # Perform CRC to calculate the check value
+    crc()
+    
+    # Display the computed CRC value
+    print(f"CRC or Check value is: {''.join(check_value)}")
+    
+    # Append the CRC to the data
+    data = data[:len(data) - (len(gen_poly) - 1)] + ''.join(check_value)
+    print("\n----------------------------------------")
+    print(f"Final data to be sent: {data}")
+    print("----------------------------------------\n")
+    
+    # Call the receiver function to check for errors
+    receiver()

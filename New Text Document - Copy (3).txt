@@ -1,0 +1,31 @@
+def main():
+    # Input window size
+    w = int(input("Enter window size: "))
+    
+    # Input number of frames to transmit
+    f = int(input("\nEnter number of frames to transmit: "))
+    
+    # Input the frames
+    frames = []
+    print(f"\nEnter {f} frames: ", end="")
+    for _ in range(f):
+        frames.append(int(input()))
+    
+    print("\nWith sliding window protocol, the frames will be sent in the following manner (assuming no corruption of frames)\n")
+    print(f"After sending {w} frames at each stage, sender waits for acknowledgement sent by the receiver\n")
+
+    # Sliding window protocol simulation
+    for i in range(1, f + 1):
+        if i % w == 0:
+            print(frames[i - 1])  # Print the frame
+            print("Acknowledgement of above frames sent is received by sender\n")
+        else:
+            print(frames[i - 1], end=" ")  # Print frames in the same line
+    
+    # Handle remaining frames if not divisible by window size
+    if f % w != 0:
+        print("\nAcknowledgement of above frames sent is received by sender")
+
+# Execute the program
+if _name_ == "_main_":
+    main()
